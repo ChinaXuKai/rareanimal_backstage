@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guangyou.rareanimal_backstage.mapper.AdminerMapper">
+
+    <resultMap id="adminer" type="com.guangyou.rareanimal_backstage.pojo.entity.Adminer">
+        <id property="adminerId" column="adminer_id"></id>
+        <result property="adminerName" column="adminer_name"></result>
+        <result property="adminerAccount" column="adminer_account"></result>
+        <result property="adminerPwd" column="adminer_pwd"></result>
+        <result property="adminerAvatar" column="adminer_avatar"></result>
+    </resultMap>
+
+<!--    Adminer selectAdminerByAccAndPwd(String account, String password);-->
+    <select id="selectAdminerByAccAndPwd" resultMap="adminer">
+        select adminer_id, adminer_name, adminer_account, adminer_pwd, adminer_avatar
+        from t_adminer
+        where adminer_account = #{account}
+        and adminer_pwd = #{password}
+    </select>
+</mapper>

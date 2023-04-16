@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guangyou.rareanimal_backstage.mapper.ArticleMapper">
+
+<!--    List<Article> getArticlesByCategory(Long categoryId, Integer initialDataLocation, Integer pageSize);-->
+    <select id="getArticlesByCategory" resultType="com.guangyou.rareanimal_backstage.pojo.entity.Article">
+        SELECT *
+        FROM t_article
+        WHERE category_id = #{categoryId}
+        LIMIT #{initialDataLocation},#{pageSize}
+    </select>
+</mapper>

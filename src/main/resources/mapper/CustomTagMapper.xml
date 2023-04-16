@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guangyou.rareanimal_backstage.mapper.CustomTagMapper">
+
+    <!--    List<CustomTagVo> selectTagsByArticleId(Long articleId);-->
+    <select id="selectTagsByArticleId" resultType="com.guangyou.rareanimal_backstage.pojo.vo.CustomTagVo">
+        select id,custom_tag_name as customTagName
+        from t_article_custom_tag
+        where article_id = #{articleId}
+    </select>
+
+
+
+</mapper>

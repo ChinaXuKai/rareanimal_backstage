@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guangyou.rareanimal_backstage.mapper.AnimalLabelMapper">
+
+<!--    <parameterMap id="animalLabel" type="com.guangyou.rareanimal_backstage.pojo.vo.AnimalLabelVo">-->
+<!--        <parameter property="animalLabel"></parameter>-->
+<!--    </parameterMap>-->
+
+    <!--    void addAnimalLabelById(Integer animalId, String animalLabel);-->
+    <insert id="addAnimalLabelById">
+        insert into t_animal_label(id,animal_id,animal_label)
+        values(null,#{animalId},#{animalLabel})
+    </insert>
+</mapper>

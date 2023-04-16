@@ -1,0 +1,5 @@
+pojo 分层：
+    Vo：显示层对象，与前端交互的所有对象，本项目用作 返回至前端展示使用
+    Dto：数据传输对象，Service 或 Manager 向外传输的对象。controller 传给 service。本项目用作 接收前端页面参数使用
+    entity：与数据库表相一致
+

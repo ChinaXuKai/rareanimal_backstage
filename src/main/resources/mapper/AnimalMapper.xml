@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guangyou.rareanimal_backstage.mapper.AnimalMapper">
+    <parameterMap id="animalBasicInfo" type="com.guangyou.rareanimal_backstage.pojo.dto.AnimalBasicInfoDto">
+        <parameter property="animalName"/>
+        <parameter property="animalAlias"/>
+        <parameter property="animalImgUrl"/>
+        <parameter property="animalSpecificType"/>
+        <parameter property="distributionArea"/>
+        <parameter property="protectGrade"/>
+    </parameterMap>
+
+    <sql id="addAnimal-basicInfo">
+        (animal_id,animal_name,alias,animal_img,animal_classification,distribution_area,protect_grade)
+    </sql>
+
+<!--updateAnimalById(Integer animalId, Integer isVertebrates, Integer isCreep,
+                    Integer isFish, Integer isBirds, Integer isSuckle, Integer isAmphibian);-->
+    <update id="updateAnimalById">
+        update t_animal
+        set is_vertebrates = #{isVertebrates}, is_amphibian = #{isAmphibian}, is_birds = #{isBirds},
+            is_creep = #{isCreep}, is_fish = #{isFish}, is_suckle = #{isSuckle}
+        where animal_id = #{animalId}
+    </update>
+
+
+    <delete id="deleteByAnimalId">
+        DELETE FROM t_animal
+        WHERE animal_id = #{animaId}
+    </delete>
+
+    <!--    int addAnimalBasicInfo(AnimalBasicInfoVo animalBasicInfo);-->
+    <insert id="addAnimalBasicInfo" parameterMap="animalBasicInfo">
+        insert into t_animal <include refid="addAnimal-basicInfo"></include>
+        values(null,?,?,?,?,?,?)
+    </insert>
+
+<!--    Animal selectAnimalByName(String animalName);-->
+    <select id="selectAnimalByName" resultType="com.guangyou.rareanimal_backstage.pojo.entity.Animal">
+        select animal_id, animal_name
+        from t_animal
+        where animal_name = #{animalName}
+    </select>
+
+<!--    List<Animal> selectAnimalByPage(Integer initialDataLocation, Integer pageSize);-->
+    <select id="selectAnimalByPage" resultType="com.guangyou.rareanimal_backstage.pojo.entity.Animal">
+        select *
+        from t_animal
+        limit #{initialDataLocation},#{pageSize}
+    </select>
+
+</mapper>

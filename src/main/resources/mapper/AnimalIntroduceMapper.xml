@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guangyou.rareanimal_backstage.mapper.AnimalIntroduceMapper">
+
+    <parameterMap id="animalIntroduce" type="com.guangyou.rareanimal_backstage.pojo.dto.AnimalIntroduceDto">
+        <parameter property="animalId"/>
+        <parameter property="morphology"/>
+        <parameter property="habitat"/>
+        <parameter property="habits"/>
+        <parameter property="populationStatus"/>
+        <parameter property="protectionLevel"/>
+        <parameter property="elseInfo"/>
+    </parameterMap>
+
+<!--    void addAnimalIntroduceById(Integer animalId, AnimalIntroduceVo animalIntroduce);-->
+    <insert id="addAnimalIntroduceById" parameterMap="animalIntroduce">
+        insert into t_animal_introduce
+        (animal_id,morphology,habitat,habits,population_status,protection_level,else_info)
+        values(?,?,?,?,?,?,?)
+    </insert>
+
+<!--    void deleteByAnimalId(Integer animalId);-->
+    <delete id="deleteByAnimalId">
+        delete from t_animal_introduce
+        where animal_id = #{animalId}
+    </delete>
+
+
+</mapper>
