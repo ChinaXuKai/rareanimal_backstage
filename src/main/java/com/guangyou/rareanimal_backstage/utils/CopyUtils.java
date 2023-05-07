@@ -251,7 +251,7 @@ public class CopyUtils {
 
 
     @Autowired
-    private ActivityCoverMapper activityCoverMapper;
+    private ActivityMapper activityMapper;
     @Autowired
     private ActivityCustomTagMapper activityCustomTagMapper;
     @Autowired
@@ -278,19 +278,25 @@ public class CopyUtils {
     private ActivityVo activityCopy(Activity activity) {
         ActivityVo activityVo = new ActivityVo();
         BeanUtils.copyProperties(activity, activityVo);
-        //publisherVo、publishTime、endTime、updateTime、coversUrl、tagsDescribe、joinCount、isHot、
+        //publisherVo、requestTime、startTime、endTime、updateTime、coversUrl、tagsDescribe、joinCount、isHot
         //publisherVo
         User publisher = userMapper.getUserById(activity.getPublishUid().intValue());
-        activityVo.setPublisherVo(userCopy(publisher));
-        //publishTime、endTime、updateTime
-        String publishTime = new DateTime(activity.getPublishTime()).toString("yyyy-MM-dd HH:mm:ss");
+        UserVo publisherVo = new UserVo();
+        BeanUtils.copyProperties(publisher, publisherVo);
+        activityVo.setPublisherVo(publisherVo);
+        //requestTime、startTime、endTime、updateTime
+        String requestTime = new DateTime(activity.getRequestTime()).toString("yyyy-MM-dd HH:mm:ss");
+        String startTime = new DateTime(activity.getStartTime()).toString("yyyy-MM-dd HH:mm:ss");
         String endTime = new DateTime(activity.getEndTime()).toString("yyyy-MM-dd HH:mm:ss");
         String updateTime = new DateTime(activity.getUpdateTime()).toString("yyyy-MM-dd HH:mm:ss");
-        activityVo.setPublishTime(publishTime);
+        activityVo.setRequestTime(requestTime);
+        activityVo.setStartTime(startTime);
         activityVo.setEndTime(endTime);
         activityVo.setUpdateTime(updateTime);
         //coversUrl
-        List<String> coversUrl = activityCoverMapper.getActivityCoverById(activity.getActivityId());
+        LambdaQueryWrapper<Activity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Activity::getActivityId, activity.getActivityId());
+        String coversUrl = activityMapper.selectOne(queryWrapper).getCoverUrl();
         activityVo.setCoversUrl(coversUrl);
         //tagsDescribe
         List<String> tags = activityCustomTagMapper.getTagById(activity.getActivityId());
@@ -300,8 +306,10 @@ public class CopyUtils {
         aJoinQueryWrapper.eq(ActivityJoin::getActivityId, activity.getActivityId());
         int joinCount = activityJoinMapper.selectCount(aJoinQueryWrapper).intValue();
         activityVo.setJoinCount(joinCount);
-        //isHot
-        if (joinCount > (userMapper.selectCount(null)/1000) ){
+        //isHot：(已报名人数大于参见人数上限一半 且 参见人数上限大于5)   或   已报名人数大于总用户的千分之一
+        Long userCount = userMapper.selectCount(null);
+        if ( ( (joinCount>(activity.getPeopleCeiling()/2)) && activity.getPeopleCeiling()>5 )
+                ||  (joinCount > userCount/1000)){
             activityVo.setIsHot(true);
         }
         return activityVo;

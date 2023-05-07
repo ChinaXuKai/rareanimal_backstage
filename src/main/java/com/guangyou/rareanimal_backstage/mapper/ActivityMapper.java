@@ -1,9 +1,7 @@
 package com.guangyou.rareanimal_backstage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.entity.Activity;
-import com.guangyou.rareanimal_backstage.pojo.vo.ActivityVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,6 +12,7 @@ import java.util.List;
  */
 @Mapper
 public interface ActivityMapper extends BaseMapper<Activity> {
+
     /**
      * 获取活动 分页数据集
      * @param initialDataLocation 初始数据位置

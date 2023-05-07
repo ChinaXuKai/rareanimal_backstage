@@ -28,15 +28,13 @@ public class OpinionServiceImpl implements OpinionService {
     @Override
     public PageDataVo<OpinionVo> getOpinionsByPage(PageDto pageDto) {
         PageDataVo<OpinionVo> pageDataVo = new PageDataVo<>();
-        LambdaQueryWrapper<Opinion> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Opinion::getIsDelete,0);
-        List<Opinion> opinionList = opinionMapper.selectList(queryWrapper);
+        List<Opinion> opinionList = opinionMapper.getOpinionsByPage(pageDto.getPageSize() * (pageDto.getPage() - 1), pageDto.getPageSize());
         List<OpinionVo> opinionVoList = copyUtils.opinionListCopy(opinionList);
         pageDataVo.setPageData(opinionVoList);
         //设置 数据库中用户意见总数（total）、每页显示数量（size）、当前第几页（current）、总共有多少页数据（pages）
         pageDataVo.setCurrent(pageDto.getPage());
         pageDataVo.setSize(pageDto.getPageSize());
-        int total = opinionMapper.selectCount(null).intValue();
+        int total = opinionMapper.selectCount(new LambdaQueryWrapper<Opinion>().eq(Opinion::getIsDelete,0)).intValue();
         pageDataVo.setTotal(total);
         int isRemainZero = total%pageDto.getPageSize();
         if (isRemainZero != 0){
