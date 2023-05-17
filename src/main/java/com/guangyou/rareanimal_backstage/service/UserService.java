@@ -1,10 +1,9 @@
 package com.guangyou.rareanimal_backstage.service;
 
+import com.guangyou.rareanimal_backstage.common.lang.Result;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.UserVo;
-
-import java.util.List;
 
 /**
  * @author xukai
@@ -18,4 +17,11 @@ public interface UserService {
      * @return 用户信息分页数据集
      */
     PageDataVo<UserVo> getUserListByPage(PageDto pageDto);
+
+    /**
+     * 根据用户id 逻辑删除 用户
+     * @param userId 用户id
+     * @return 结果集
+     */
+    Result deleteUserByUid(Long userId);
 }

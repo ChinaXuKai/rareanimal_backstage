@@ -2,8 +2,11 @@ package com.guangyou.rareanimal_backstage.service;
 
 import com.guangyou.rareanimal_backstage.pojo.dto.AnimalDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
+import com.guangyou.rareanimal_backstage.pojo.entity.Animal;
 import com.guangyou.rareanimal_backstage.pojo.vo.AnimalVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
+
+import java.util.List;
 
 /**
  * @author xukai
@@ -37,4 +40,12 @@ public interface AnimalService {
      * @return 分页后的动物信息集合
      */
     PageDataVo<AnimalVo> getAnimalsByPage(PageDto pageDto);
+
+    /**
+     * 根据 animalLike 进行模糊查询动物
+     * @param animalLike 模糊的查询：动物名称、动物标签
+     * @return
+     */
+    List<AnimalVo> selectAnimalByLike(String animalLike);
+
 }

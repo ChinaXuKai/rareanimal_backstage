@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,13 @@ public class UserController {
             return Result.fail("获取用户列表异常");
         }
         return Result.succ(200,"用户列表已获取到",userVoPage);
+    }
+
+
+    @ApiOperation(value = "删除用户")
+    @DeleteMapping("/deleteUserByUid")
+    public Result deleteUserByUid(Long userId){
+        return userService.deleteUserByUid(userId);
     }
 
 }

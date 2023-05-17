@@ -21,4 +21,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @return
      */
     List<Article> getArticlesByCategory(Long categoryId, Integer initialDataLocation, Integer pageSize);
+
+    /**
+     * 根据文章id 逻辑删除文章
+     * @param articleId 文章id
+     * @return 逻辑删除结果
+     */
+    int deleteArticleByAid(Long articleId);
+
 }

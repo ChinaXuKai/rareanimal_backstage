@@ -1,12 +1,14 @@
 package com.guangyou.rareanimal_backstage.controller;
 
 import com.guangyou.rareanimal_backstage.common.lang.Result;
+import com.guangyou.rareanimal_backstage.pojo.dto.AuditDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.vo.ActivityVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
 import com.guangyou.rareanimal_backstage.service.ActivityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,12 +43,12 @@ public class ActivityController {
 
     @ApiOperation(value = "审核活动")
     @PutMapping("/auditActivity")
-    public Result auditActivity(Long activityId,String isPassAudit){
-        int auditResult = activityService.auditActivity(activityId,isPassAudit);
+    public Result auditActivity(AuditDto auditDto){
+        int auditResult = activityService.auditActivity(auditDto);
         if (auditResult == 0){
             return Result.fail("审核出现异常");
         }
-        return Result.succ(200,"审核成功",activityId);
+        return Result.succ("审核成功，活动id为：" + auditDto.getId());
 
     }
 

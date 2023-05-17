@@ -67,4 +67,7 @@ public class ArticleVo {
     @ApiModelProperty(value = "文章访问权限：全部可见、关注可见、仅我可见")
     private String visitPermission;
 
+    @ApiModelProperty(value = "审核状态：待审核、审核通过、审核不通过")
+    private String auditState;
+
 }

@@ -3,6 +3,7 @@ package com.guangyou.rareanimal_backstage.controller;
 import com.guangyou.rareanimal_backstage.common.lang.Result;
 import com.guangyou.rareanimal_backstage.pojo.dto.AnimalDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
+import com.guangyou.rareanimal_backstage.pojo.entity.Animal;
 import com.guangyou.rareanimal_backstage.pojo.vo.AnimalVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
 import com.guangyou.rareanimal_backstage.service.AnimalService;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author xukai
@@ -70,4 +73,16 @@ public class AnimalController {
         return Result.succ(200,"删除成功",deleteAnimalId);
     }
 
+
+    @ApiOperation(value = "根据动物名称进行模糊查询动物",notes = "查询特定名称动物的相关信息（模糊查询）")
+    @GetMapping("/getAnimalInfo")
+    public Result getAnimalInfo(String animalLike){
+        List<AnimalVo> likeAnimals = animalService.selectAnimalByLike(animalLike);
+
+        if (likeAnimals.isEmpty()){
+            return Result.fail(Result.FORBIDDEN,"未查找到你指定的动物",null);
+        }else {
+            return Result.succ(200,"已查找到你指定的动物",likeAnimals);
+        }
+    }
 }

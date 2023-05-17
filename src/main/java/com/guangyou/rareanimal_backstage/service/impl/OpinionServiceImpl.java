@@ -1,9 +1,13 @@
 package com.guangyou.rareanimal_backstage.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.guangyou.rareanimal_backstage.mapper.OpinionMapper;
+import com.guangyou.rareanimal_backstage.mapper.OpinionReplyMapper;
+import com.guangyou.rareanimal_backstage.pojo.dto.OpinionReplyDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.entity.Opinion;
+import com.guangyou.rareanimal_backstage.pojo.entity.OpinionReply;
 import com.guangyou.rareanimal_backstage.pojo.vo.OpinionVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
 import com.guangyou.rareanimal_backstage.service.OpinionService;
@@ -43,5 +47,35 @@ public class OpinionServiceImpl implements OpinionService {
             pageDataVo.setPages( total/pageDto.getPageSize() );
         }
         return pageDataVo;
+    }
+
+
+    @Autowired
+    private OpinionReplyMapper opinionReplyMapper;
+
+    @Override
+    public Long replyOpinion(OpinionReplyDto opinionReplyDto) {
+        OpinionReply opinionReply = new OpinionReply();
+        opinionReply.setOpinionId(opinionReplyDto.getOpinionId());
+        opinionReply.setReplyContent(opinionReplyDto.getReplyContent());
+        opinionReply.setIsDelete(0);
+        opinionReplyMapper.insert(opinionReply);
+        return opinionReply.getOpinionReplyId();
+    }
+
+
+    @Override
+    public int deleteOpinion(Long opinionId) {
+        //根据用户意见id 逻辑删除 用户意见
+        LambdaUpdateWrapper<Opinion> opinionUpdateWrapper = new LambdaUpdateWrapper<>();
+        opinionUpdateWrapper.eq(Opinion::getOpinionId, opinionId);
+        opinionUpdateWrapper.set(Opinion::getIsDelete, 1);
+        int deleteOpinion = opinionMapper.update(null, opinionUpdateWrapper);
+        //根据用户意见id 逻辑删除 回复
+        LambdaUpdateWrapper<OpinionReply> replyUpdateWrapper = new LambdaUpdateWrapper<>();
+        replyUpdateWrapper.eq(OpinionReply::getOpinionId, opinionId);
+        replyUpdateWrapper.set(OpinionReply::getIsDelete, 1);
+        int deleteReply = opinionReplyMapper.update(null, replyUpdateWrapper);
+        return deleteOpinion + deleteReply;
     }
 }

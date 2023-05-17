@@ -22,6 +22,16 @@
     <select id="getUserListByPage" resultType="com.guangyou.rareanimal_backstage.pojo.entity.User">
         select *
         from t_user
+        where is_delete = 0
         LIMIT #{initialDataLocation},#{pageSize}
     </select>
+
+<!--    int deleteByUid(Long userId)-->
+    <update id="deleteByUid">
+        update t_user
+        set is_delete = 1
+        where user_id = #{userId}
+    </update>
+
+
 </mapper>

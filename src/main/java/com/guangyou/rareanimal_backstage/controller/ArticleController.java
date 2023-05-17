@@ -1,17 +1,15 @@
 package com.guangyou.rareanimal_backstage.controller;
 
 import com.guangyou.rareanimal_backstage.common.lang.Result;
+import com.guangyou.rareanimal_backstage.pojo.dto.AuditDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.vo.ArticleVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
 import com.guangyou.rareanimal_backstage.service.ArticleService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -39,6 +37,23 @@ public class ArticleController {
         }
     }
 
+
+    @ApiOperation(value = "删除文章")
+    @DeleteMapping("/deleteArticleByAid")
+    public Result deleteArticleByAid(Long ArticleId){
+        return articleService.deleteArticleByAid(ArticleId);
+    }
+
+
+    @ApiOperation(value = "审核文章")
+    @PutMapping("/auditArticle")
+    public Result auditArticle( AuditDto auditDto){
+        int auditResult = articleService.auditArticle(auditDto);
+        if (auditResult == 0) {
+            return Result.fail("审核文章出现异常");
+        }
+        return Result.succ( "审核成功，文章id为：" + auditDto.getId());
+    }
 
 
 }

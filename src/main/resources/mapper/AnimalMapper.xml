@@ -12,6 +12,11 @@
         <parameter property="protectGrade"/>
     </parameterMap>
 
+    <sql id="animal-complete-field">
+        t_animal.animal_id, animal_name, alias, animal_img,
+        is_vertebrates, is_suckle, is_birds, is_creep, is_fish, is_amphibian,
+        animal_classification, distribution_area, protect_grade, animal_label
+    </sql>
     <sql id="addAnimal-basicInfo">
         (animal_id,animal_name,alias,animal_img,animal_classification,distribution_area,protect_grade)
     </sql>
@@ -49,6 +54,16 @@
         select *
         from t_animal
         limit #{initialDataLocation},#{pageSize}
+    </select>
+
+<!--    List<Animal> selectAnimalByLikeName(String animalLike);-->
+    <select id="selectAnimalByLikeName" resultType="com.guangyou.rareanimal_backstage.pojo.entity.Animal">
+        select
+        <include refid="animal-complete-field"></include>
+        from t_animal,t_animal_introduce,t_animal_label
+        where t_animal.animal_id = t_animal_introduce.animal_id
+        and t_animal.animal_id = t_animal_label.animal_id
+        and (animal_name like #{animalName} or animal_label like #{animalName})
     </select>
 
 </mapper>

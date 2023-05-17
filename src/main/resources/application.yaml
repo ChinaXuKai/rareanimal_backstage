@@ -28,11 +28,11 @@ spring:
       #设置超时连接时间
     timeout: 1800000
 
-#shiro-redis:
-#  enabled: true
-#  redis-manager:
-#    host: 120.78.75.230:6379
-#    password: 2577715138qwer
+shiro-redis:
+  enabled: true
+  redis-manager:
+    host: 120.78.75.230:6379
+    password: 2577715138qwer
 
 mybatis-plus:
   configuration:
@@ -43,14 +43,14 @@ mybatis-plus:
     db-config:
       table-prefix: t_
 
-#shiro:
-#  loginUrl: /login/loginAdminer
+shiro:
+  loginUrl: /login/loginAdminer
 
-#rareanimal:
-#  jwt:
-#    secret: f4e2e52034348f86b67cde581c0f9eb5
-#    expire: 604800
-#    header: token
+rareanimal:
+  jwt:
+    secret: f4e2e52034348f86b67cde581c0f9eb5
+    expire: 604800
+    header: token
 
 ftp:
   host: 120.78.75.230

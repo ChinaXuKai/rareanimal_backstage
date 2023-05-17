@@ -8,15 +8,19 @@ import com.guangyou.rareanimal_backstage.pojo.dto.*;
 import com.guangyou.rareanimal_backstage.pojo.entity.Animal;
 import com.guangyou.rareanimal_backstage.pojo.entity.AnimalIntroduce;
 import com.guangyou.rareanimal_backstage.pojo.entity.AnimalLabel;
+import com.guangyou.rareanimal_backstage.pojo.vo.AnimalLabelVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.AnimalVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
 import com.guangyou.rareanimal_backstage.service.AnimalService;
 import com.guangyou.rareanimal_backstage.utils.CopyUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -200,5 +204,30 @@ public class AnimalServiceImpl implements AnimalService {
             pageDataVo.setPages( allAnimalList.size()/pageDto.getPageSize() );
         }
         return pageDataVo;
+    }
+
+    @Override
+    public List<AnimalVo> selectAnimalByLike(String animalLike) {
+        List<Animal> animalsByLike = animalMapper.selectAnimalByLikeName("%"+animalLike+"%");
+        List<AnimalVo> animalVoList = copyUtils.animalListCopy(animalsByLike);
+        getAnimalLabels(animalVoList);
+        return animalVoList;
+    }
+
+    /**
+     * 将数据库里的 单个动物标签 拆分成 List<String>类型的多个动物标签
+     * @param animalList
+     * @return
+     */
+    private void getAnimalLabels(List<AnimalVo> animalList){
+        for (AnimalVo animalVo : animalList){
+            Long animalId = animalVo.getAnimalId();
+            AnimalLabelVo animalLabelVo = new AnimalLabelVo();
+            AnimalLabel animalLabel = animalLabelMapper.selectOne(new LambdaQueryWrapper<AnimalLabel>().eq(AnimalLabel::getAnimalId, animalId));
+            BeanUtils.copyProperties(animalLabel,animalLabelVo);
+            String[] animalLabels = animalLabelVo.getAnimalLabel().split("、");
+            List<String> labelList = new ArrayList<>(Arrays.asList(animalLabels));
+            animalVo.setAnimalLabel(labelList);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.guangyou.rareanimal_backstage.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.guangyou.rareanimal_backstage.common.lang.Result;
 import com.guangyou.rareanimal_backstage.mapper.UserMapper;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.entity.User;
@@ -28,12 +29,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageDataVo<UserVo> getUserListByPage(PageDto pageDto) {
         PageDataVo<UserVo> pageDataVo = new PageDataVo<>();
+        //分页查询
         List<User> userList = userMapper.getUserListByPage(pageDto.getPageSize() * (pageDto.getPage() - 1), pageDto.getPageSize());
         List<UserVo> userVoList = copyUtils.userListCopy(userList);
+        //设置分页参数
         pageDataVo.setPageData(userVoList);
         pageDataVo.setCurrent(pageDto.getPage());
         pageDataVo.setSize(pageDto.getPageSize());
-        int total = userMapper.selectCount(null).intValue();
+            //统计未删除用户个数
+        int total = userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getIsDelete,0)).intValue();
         pageDataVo.setTotal(total);
         int isRemainZero = total%pageDto.getPageSize();
         if (isRemainZero != 0){
@@ -42,5 +46,15 @@ public class UserServiceImpl implements UserService {
             pageDataVo.setPages( total/pageDto.getPageSize() );
         }
         return pageDataVo;
+    }
+
+
+    @Override
+    public Result deleteUserByUid(Long userId) {
+        int deleteResult = userMapper.deleteByUid(userId);
+        if (deleteResult == 0){
+            return Result.fail( "删除用户失败");
+        }
+        return Result.succ(200, "删除用户成功", userId);
     }
 }

@@ -9,6 +9,16 @@
         SELECT *
         FROM t_article
         WHERE category_id = #{categoryId}
+        and is_delete = 0
         LIMIT #{initialDataLocation},#{pageSize}
     </select>
+
+<!--    int deleteArticleByAid(Long articleId)-->
+    <update id="deleteArticleByAid">
+        update t_article
+        set is_delete = 1
+        where category_id = #{categoryId}
+    </update>
+
+
 </mapper>

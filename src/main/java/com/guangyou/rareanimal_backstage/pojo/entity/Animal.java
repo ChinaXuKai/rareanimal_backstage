@@ -45,4 +45,5 @@ public class Animal implements Serializable {
 
     private String protectGrade;
 
+
 }

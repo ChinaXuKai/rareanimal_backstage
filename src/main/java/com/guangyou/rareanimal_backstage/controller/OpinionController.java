@@ -1,6 +1,7 @@
 package com.guangyou.rareanimal_backstage.controller;
 
 import com.guangyou.rareanimal_backstage.common.lang.Result;
+import com.guangyou.rareanimal_backstage.pojo.dto.OpinionReplyDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.entity.Opinion;
 import com.guangyou.rareanimal_backstage.pojo.vo.OpinionVo;
@@ -10,9 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author xukai
@@ -38,7 +37,25 @@ public class OpinionController {
     }
 
 
+    @ApiOperation(value = "管理员回复用户意见")
+    @PostMapping("/replyOpinion")
+    public Result replyOpinion(OpinionReplyDto opinionReplyDto){
+        Long replyId = opinionService.replyOpinion(opinionReplyDto);
+        if (replyId == 0 || replyId == null) {
+            return Result.fail("回复用户意见出现了异常");
+        }
+        return Result.succ("回复用户意见成功，回复id为：" + replyId + ",意见id为：" + opinionReplyDto.getOpinionId());
+    }
 
 
+    @ApiOperation(value = "管理员删除用户意见")
+    @DeleteMapping("/deleteOpinion")
+    public Result deleteOpinion(Long opinionId){
+        int deleteResult = opinionService.deleteOpinion(opinionId);
+        if (deleteResult == 0) {
+            return Result.fail("删除出现异常");
+        }
+        return Result.succ("删除用户意见成功，被删除的意见id为：" + opinionId);
+    }
 
 }

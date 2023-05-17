@@ -2,6 +2,7 @@ package com.guangyou.rareanimal_backstage.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.guangyou.rareanimal_backstage.mapper.ActivityMapper;
+import com.guangyou.rareanimal_backstage.pojo.dto.AuditDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.entity.Activity;
 import com.guangyou.rareanimal_backstage.pojo.vo.ActivityVo;
@@ -51,11 +52,11 @@ public class ActivityServiceImpl implements ActivityService {
 
 
     @Override
-    public int auditActivity(Long activityId, String isPassAudit) {
+    public int auditActivity(AuditDto auditDto) {
         LambdaQueryWrapper<Activity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Activity::getActivityId, activityId);
+        queryWrapper.eq(Activity::getActivityId, auditDto.getId());
         Activity dbActivity = activityMapper.selectOne(queryWrapper);
-        dbActivity.setAuditState(isPassAudit);
+        dbActivity.setAuditState(auditDto.getIsPassAudit());
         dbActivity.setAuditTime(System.currentTimeMillis());
         return activityMapper.update(dbActivity,queryWrapper);
     }

@@ -54,4 +54,10 @@ public interface AnimalMapper extends BaseMapper<Animal> {
      */
     List<Animal> selectAnimalByPage(Integer initialDataLocation, Integer pageSize);
 
+    /**
+     *
+     * @param animalLike
+     * @return
+     */
+    List<Animal> selectAnimalByLikeName(String animalLike);
 }

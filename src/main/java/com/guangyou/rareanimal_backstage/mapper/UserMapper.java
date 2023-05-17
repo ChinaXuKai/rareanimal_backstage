@@ -33,4 +33,11 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 用户分页数据集
      */
     List<User> getUserListByPage(Integer initialDataLocation, Integer pageSize);
+
+    /**
+     * 根据用户id 逻辑删除 用户
+     * @param userId 用户id
+     * @return 逻辑删除结果
+     */
+    int deleteByUid(Long userId);
 }

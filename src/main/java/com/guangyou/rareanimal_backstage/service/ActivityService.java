@@ -1,5 +1,6 @@
 package com.guangyou.rareanimal_backstage.service;
 
+import com.guangyou.rareanimal_backstage.pojo.dto.AuditDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.vo.ActivityVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
@@ -19,9 +20,8 @@ public interface ActivityService {
 
     /**
      * 审核活动
-     * @param activityId 活动id
-     * @param isPassAudit 是否通过审核
+     * @param auditDto
      * @return 活动id
      */
-    int auditActivity(Long activityId, String isPassAudit);
+    int auditActivity(AuditDto auditDto);
 }

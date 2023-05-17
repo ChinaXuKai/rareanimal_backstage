@@ -15,8 +15,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Article {
-    public static final int Article_TOP = 1;
 
+    //审核状态：待审核、审核通过、审核不通过
+    public static final String WAIT_AUDIT = "待审核";
+    public static final String PASS_AUDIT = "审核通过";
+    public static final String NO_PASS_AUDIT = "审核不通过";
+
+    public static final int Article_TOP = 1;
     public static final int Article_Common = 0;
 
     private Long id;
@@ -71,4 +76,10 @@ public class Article {
      * 1：已经展示
      */
     private Integer isRead;
+    /**
+     * 审核状态：待审核、审核通过、审核不通过
+     */
+    private String auditState;
+
+
 }
