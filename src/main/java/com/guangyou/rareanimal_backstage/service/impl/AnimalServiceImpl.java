@@ -1,6 +1,7 @@
 package com.guangyou.rareanimal_backstage.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.guangyou.rareanimal_backstage.common.lang.Result;
 import com.guangyou.rareanimal_backstage.mapper.AnimalIntroduceMapper;
 import com.guangyou.rareanimal_backstage.mapper.AnimalLabelMapper;
 import com.guangyou.rareanimal_backstage.mapper.AnimalMapper;
@@ -8,6 +9,7 @@ import com.guangyou.rareanimal_backstage.pojo.dto.*;
 import com.guangyou.rareanimal_backstage.pojo.entity.Animal;
 import com.guangyou.rareanimal_backstage.pojo.entity.AnimalIntroduce;
 import com.guangyou.rareanimal_backstage.pojo.entity.AnimalLabel;
+import com.guangyou.rareanimal_backstage.pojo.vo.AnimalIntroduceVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.AnimalLabelVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.AnimalVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
@@ -50,13 +52,19 @@ public class AnimalServiceImpl implements AnimalService {
      */
     @Transactional(readOnly = false)
     @Override
-    public Integer addAnimal(AnimalDto animalDto) {
+    public Result addAnimal(AnimalDto animalDto) {
+        //先在 t_animal表中查询是否有相同的名称动物，有则抛异常
+        Animal dbAnimal = animalMapper.selectAnimalByName(animalDto.getAnimalBasicInfo().getAnimalName());
+        if (dbAnimal != null) {
+            return Result.fail(Result.FORBIDDEN,"当前动物数据里已经存在同名动物，请不要重复添加",null);
+        }
+
         //1、添加动物的基本信息
         AnimalBasicInfoDto animalBasicInfo = animalDto.getAnimalBasicInfo();
         animalMapper.addAnimalBasicInfo(animalBasicInfo);
         //2、根据动物名称查询动物，获取到等 动物id
         String animalName = animalBasicInfo.getAnimalName();
-        Animal animal= animalMapper.selectAnimalByName(animalName);
+        Animal animal = animalMapper.selectAnimalByName(animalName);
         Integer animalId = animal.getAnimalId();
         //3、根据 动物id 添加动物类型 ：animalType
         AnimalTypeDto animalType = animalDto.getAnimalType();
@@ -83,7 +91,7 @@ public class AnimalServiceImpl implements AnimalService {
         AnimalIntroduceDto animalIntroduce = animalDto.getAnimalIntroduce();
         animalIntroduce.setAnimalId(animalId);
         animalIntroduceMapper.addAnimalIntroduceById(animalIntroduce);
-        return animalId;
+        return Result.fail(200, "新增动物成功", animalId);
     }
 
 
@@ -98,6 +106,12 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional(readOnly = false)
     @Override
     public int deleteAnimalById(Integer animalId) {
+        //在 t_animal 表中查询是否有该数据
+        Animal dbAnimal = animalMapper.selectOne(new LambdaQueryWrapper<Animal>().eq(Animal::getAnimalId, animalId));
+        if (dbAnimal == null) {
+            return 0;
+        }
+
         // 1、根据 动物id 删除 t_animal 表的数据
         animalMapper.deleteByAnimalId(animalId);
         // 2、根据 动物id 删除 t_animal_introduce 表数据
@@ -188,7 +202,7 @@ public class AnimalServiceImpl implements AnimalService {
     public PageDataVo<AnimalVo> getAnimalsByPage(PageDto pageDto) {
         PageDataVo<AnimalVo> pageDataVo = new PageDataVo<>();
         List<Animal> animalList = animalMapper.selectAnimalByPage(pageDto.getPageSize() * (pageDto.getPage() - 1), pageDto.getPageSize());
-        List<AnimalVo> animalVoList = copyUtils.animalListCopy(animalList);
+        List<AnimalVo> animalVoList = copyUtils.animalListCopy(false,animalList);
         //
         pageDataVo.setPageData(animalVoList);
         pageDataVo.setCurrent(pageDto.getPage());
@@ -206,16 +220,78 @@ public class AnimalServiceImpl implements AnimalService {
         return pageDataVo;
     }
 
+
+    /**
+     * 该实现方式会使得代码不规范（dto不应该作为展示的对象），后续需要进行修改
+     * @param animalId 动物id
+     * @return
+     */
+    @Override
+    public Result getAnimalDetailByAid(Long animalId) {
+        Animal dbAnimal = animalMapper.selectOne(new LambdaQueryWrapper<Animal>().eq(Animal::getAnimalId, animalId));
+        AnimalDto animalVo = animalDtoCopy(dbAnimal);
+        if ((animalVo==null) || (animalVo.getAnimalId()==null)) {
+            return Result.fail("查询动物详情数据出现异常");
+        }
+        return Result.succ(200, "查询出动物详情数据", animalVo);
+    }
+    /**
+     * 赋值单个 animal 为 animalDto
+     * @param animal 动物
+     * @return 动物Dto
+     */
+    private AnimalDto animalDtoCopy(Animal animal) {
+        AnimalDto animalVo = new AnimalDto();
+        BeanUtils.copyProperties(animal, animalVo);
+        //还有 animalBasicInfo、animalType、animalIntroduce、animalLabel 需要手动赋值
+        //animalIntroduce
+        LambdaQueryWrapper<AnimalIntroduce> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AnimalIntroduce::getAnimalId,animal.getAnimalId());
+        AnimalIntroduce animalIntroduce = animalIntroduceMapper.selectOne(queryWrapper);
+        AnimalIntroduceDto animalIntroduceVo = new AnimalIntroduceDto();
+        BeanUtils.copyProperties(animalIntroduce, animalIntroduceVo);
+        animalVo.setAnimalIntroduce(animalIntroduceVo);
+        //animalType
+        AnimalTypeDto animalTypeVo = new AnimalTypeDto();
+        animalTypeVo.setIsAmphibian(animal.getIsAmphibian());
+        animalTypeVo.setIsBirds(animal.getIsBirds());
+        animalTypeVo.setIsCreep(animal.getIsCreep());
+        animalTypeVo.setIsFish(animal.getIsFish());
+        animalTypeVo.setIsSuckle(animal.getIsSuckle());
+        animalTypeVo.setIsVertebrates(animal.getIsVertebrates());
+        animalVo.setAnimalType(animalTypeVo);
+        //animalBasicInfo
+        AnimalBasicInfoDto animalBasicInfoVo = new AnimalBasicInfoDto();
+        animalBasicInfoVo.setAnimalName(animal.getAnimalName());
+        animalBasicInfoVo.setAnimalAlias(animal.getAlias());
+        animalBasicInfoVo.setAnimalImgUrl(animal.getAnimalImg());
+        animalBasicInfoVo.setDistributionArea(animal.getDistributionArea());
+        animalBasicInfoVo.setProtectGrade(animal.getProtectGrade());
+        animalBasicInfoVo.setAnimalSpecificType(animal.getAnimalClassification());
+        animalVo.setAnimalBasicInfo(animalBasicInfoVo);
+        //animalLabel
+        AnimalLabelDto animalLabelVo = new AnimalLabelDto();
+        LambdaQueryWrapper<AnimalLabel> labelQueryWrapper = new LambdaQueryWrapper<>();
+        labelQueryWrapper.eq(AnimalLabel::getAnimalId,animal.getAnimalId());
+        AnimalLabel animalLabel = animalLabelMapper.selectOne(labelQueryWrapper);
+        String[] animalLabels = animalLabel.getAnimalLabel().split("、");
+        List<String> animalLabelList = new ArrayList<>(Arrays.asList(animalLabels));
+        animalLabelVo.setAnimalLabelList(animalLabelList);
+
+        animalVo.setAnimalLabel(animalLabelVo);
+        return animalVo;
+    }
+
+
     @Override
     public List<AnimalVo> selectAnimalByLike(String animalLike) {
         List<Animal> animalsByLike = animalMapper.selectAnimalByLikeName("%"+animalLike+"%");
-        List<AnimalVo> animalVoList = copyUtils.animalListCopy(animalsByLike);
+        List<AnimalVo> animalVoList = copyUtils.animalListCopy(false,animalsByLike);
         getAnimalLabels(animalVoList);
         return animalVoList;
     }
-
     /**
-     * 将数据库里的 单个动物标签 拆分成 List<String>类型的多个动物标签
+     * 将数据库里的 单个动物标签 拆分成 List<String> 类型的多个动物标签
      * @param animalList
      * @return
      */

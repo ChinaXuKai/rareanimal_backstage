@@ -57,4 +57,14 @@ public class UserServiceImpl implements UserService {
         }
         return Result.succ(200, "删除用户成功", userId);
     }
+
+    @Override
+    public Result getUserListByLike(String userLike) {
+        List<User> usersByLike = userMapper.selectUserListByLike('%'+userLike+'%');
+        if (usersByLike.isEmpty()){
+            return Result.succ("当前查询条件下没有用户");
+        }
+        List<UserVo> userVoList = copyUtils.userListCopy(usersByLike);
+        return Result.succ(userVoList);
+    }
 }

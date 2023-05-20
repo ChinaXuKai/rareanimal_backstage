@@ -30,6 +30,12 @@ public class AnimalController {
     private AnimalService animalService;
 
 
+    @ApiOperation(value = "根据动物id获取该动物的详情信息")
+    @GetMapping("/getAnimalDetailByAid")
+    public Result getAnimalDetailByAid(Long animalId){
+        return animalService.getAnimalDetailByAid(animalId);
+    }
+
     @ApiOperation(value = "分页显示动物信息",notes = "分页显示动物信息")
     @GetMapping("getAnimalList")
     public Result getAnimalList(PageDto pageDto){
@@ -44,17 +50,13 @@ public class AnimalController {
     @ApiOperation(value = "新增动物",notes = "新增动物")
     @PostMapping("addAnimal")
     public Result addAnimal(@RequestBody @Validated AnimalDto animalDto){
-        Integer animalId = animalService.addAnimal(animalDto);
-        if (animalId == null){
-            return Result.fail("新增动物失败");
-        }
-        return Result.succ(200, "新增动物成功", animalId);
+        return animalService.addAnimal(animalDto);
     }
 
 
     @ApiOperation(value = "修改动物信息",notes = "修改动物信息")
     @PutMapping("updateAnimal")
-    public Result updateAnimal( @Validated AnimalDto animalDto){
+    public Result updateAnimal(@RequestBody @Validated AnimalDto animalDto){
         int animalId = animalService.updateAnimal(animalDto);
         if (animalId == 0){
             return Result.fail("修改动物失败，要修改的动物id为：" + animalId,animalId);

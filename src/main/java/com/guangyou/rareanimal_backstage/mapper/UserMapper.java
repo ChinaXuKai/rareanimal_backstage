@@ -40,4 +40,11 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 逻辑删除结果
      */
     int deleteByUid(Long userId);
+
+    /**
+     * 根据 用户名 或 用户昵称 模糊查询用户列表
+     * @param userLike 模糊查询条件
+     * @return
+     */
+    List<User> selectUserListByLike(String userLike);
 }

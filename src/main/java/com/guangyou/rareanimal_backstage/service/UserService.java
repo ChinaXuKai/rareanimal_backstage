@@ -24,4 +24,12 @@ public interface UserService {
      * @return 结果集
      */
     Result deleteUserByUid(Long userId);
+
+    /**
+     * 根据 用户名 和 用户昵称 模糊查询 用户列表
+     * @param userLike 模糊查询条件
+     * @return 结果集
+     */
+    Result getUserListByLike(String userLike);
+
 }

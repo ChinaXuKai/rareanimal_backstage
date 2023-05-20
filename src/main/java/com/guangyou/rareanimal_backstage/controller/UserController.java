@@ -49,4 +49,12 @@ public class UserController {
         return userService.deleteUserByUid(userId);
     }
 
+
+    @ApiOperation(value = "根据用户名或用户昵称模糊查询用户列表")
+    @GetMapping("/getUserListByLike")
+    public Result getUserListByLike(String userLike){
+        return userService.getUserListByLike(userLike);
+    }
+
+
 }

@@ -2,7 +2,10 @@ package com.guangyou.rareanimal_backstage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.guangyou.rareanimal_backstage.pojo.entity.Category;
+import com.guangyou.rareanimal_backstage.pojo.vo.CategoryVo;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @author xukai
@@ -16,4 +19,9 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 圈子
      */
     Category findCategoryById(Long categoryId);
+
+    //根据文章圈子主题的id查询对应文章圈子
+    List<CategoryVo> selectCategoryByThemeId(Long themeId);
+
+
 }

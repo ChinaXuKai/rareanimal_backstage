@@ -22,4 +22,6 @@ public class AuditDto {
     @ApiModelProperty(value = "审核更新的状态：审核通过/审核不通过")
     private String isPassAudit;
 
+    @ApiModelProperty(value = "审核所要给的原因")
+    private String auditReason;
 }

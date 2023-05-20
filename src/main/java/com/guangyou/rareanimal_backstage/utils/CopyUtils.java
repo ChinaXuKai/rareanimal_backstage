@@ -41,10 +41,14 @@ public class CopyUtils {
         UserVo userVo = new UserVo();
         //UserVo 的userId、userName、userAccount 可以使用BeanUtils
         BeanUtils.copyProperties(user,userVo);
+
+        //假权限：后续需要删除重写
         //userPermission、createTime、updateTime需要手动赋值
-        if (user.OFFICIAL_ACCOUNT.equals(user.getUserAccount())){
+        if ((user.OFFICIAL_ACCOUNT.equals(user.getUserAccount())) || (user.OFFICIAL_ACCOUNT_2.equals(user.getUserAccount()))){
             userVo.setUserPermission("admin");
         }
+
+
         //userPermission先使用默认值，之后再写权限
         String createTime = new DateTime(user.getCreateTime()).toString("yyyy-MM-dd HH:mm:ss");
         userVo.setCreateTime(createTime);
@@ -60,10 +64,10 @@ public class CopyUtils {
      * @param animalList 动物集合
      * @return 动物vo集合
      */
-    public List<AnimalVo> animalListCopy(List<Animal> animalList) {
+    public List<AnimalVo> animalListCopy(boolean isAnimalIntroduce, List<Animal> animalList) {
         List<AnimalVo> animalVos = new ArrayList<>();
         for (Animal animal : animalList){
-            animalVos.add(animalCopy(animal));
+            animalVos.add(animalCopy(isAnimalIntroduce, animal));
         }
         return animalVos;
     }
@@ -72,18 +76,20 @@ public class CopyUtils {
      * @param animal 动物
      * @return 动物vo
      */
-    private AnimalVo animalCopy(Animal animal) {
+    private AnimalVo animalCopy(boolean isAnimalIntroduce, Animal animal) {
         AnimalVo animalVo = new AnimalVo();
         BeanUtils.copyProperties(animal, animalVo);
         //还有 animalIntroduce、animalLabel、animalId需要手动赋值
         //animalId
         animalVo.setAnimalId(animal.getAnimalId().longValue());
         //animalIntroduce
-        LambdaQueryWrapper<AnimalIntroduce> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AnimalIntroduce::getAnimalId,animal.getAnimalId());
-        AnimalIntroduce animalIntroduce = animalIntroduceMapper.selectOne(queryWrapper);
-        AnimalIntroduceVo animalIntroduceVo = animalIntroduceCopy(animalIntroduce);
-        animalVo.setAnimalIntroduce(animalIntroduceVo);
+        if (isAnimalIntroduce) {
+            LambdaQueryWrapper<AnimalIntroduce> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(AnimalIntroduce::getAnimalId,animal.getAnimalId());
+            AnimalIntroduce animalIntroduce = animalIntroduceMapper.selectOne(queryWrapper);
+            AnimalIntroduceVo animalIntroduceVo = animalIntroduceCopy(animalIntroduce);
+            animalVo.setAnimalIntroduce(animalIntroduceVo);
+        }
         //animalLabel
         getAnimalLabel(animalVo);
         return animalVo;

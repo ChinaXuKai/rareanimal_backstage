@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     public static final String OFFICIAL_ACCOUNT = "POEAzsyxk";
+    public static final String OFFICIAL_ACCOUNT_2 = "xukaiqwe";
 
     private Integer userId;
 

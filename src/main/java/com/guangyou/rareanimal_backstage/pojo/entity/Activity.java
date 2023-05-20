@@ -40,7 +40,11 @@ public class Activity {
 
     private Long updateTime;
 
+    //审核状态：待审核、审核通过、审核不通过
     private String auditState;
+
+    //审核所要给的原因
+    private String auditReason;
 
     private Long auditTime;
 

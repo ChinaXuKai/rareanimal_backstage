@@ -3,13 +3,18 @@ package com.guangyou.rareanimal_backstage.controller;
 import com.guangyou.rareanimal_backstage.common.lang.Result;
 import com.guangyou.rareanimal_backstage.pojo.dto.AuditDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
+import com.guangyou.rareanimal_backstage.pojo.entity.CategoryTheme;
+import com.guangyou.rareanimal_backstage.pojo.vo.ArticleCategoriesVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.ArticleVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
 import com.guangyou.rareanimal_backstage.service.ArticleService;
+import com.guangyou.rareanimal_backstage.service.CategoryService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -38,6 +43,16 @@ public class ArticleController {
     }
 
 
+    @Autowired
+    private CategoryService categoryService;
+
+    @ApiOperation(value = "获取所有的圈子")
+    @GetMapping("/getAllCategory")
+    public Result getAllCategory(){
+        return categoryService.getAllCategory();
+    }
+
+
     @ApiOperation(value = "删除文章")
     @DeleteMapping("/deleteArticleByAid")
     public Result deleteArticleByAid(Long ArticleId){
@@ -54,6 +69,5 @@ public class ArticleController {
         }
         return Result.succ( "审核成功，文章id为：" + auditDto.getId());
     }
-
 
 }

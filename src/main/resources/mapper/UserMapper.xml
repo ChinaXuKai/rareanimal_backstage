@@ -26,7 +26,15 @@
         LIMIT #{initialDataLocation},#{pageSize}
     </select>
 
-<!--    int deleteByUid(Long userId)-->
+<!--    List<User> selectUserListByLike(String userLike);-->
+    <select id="selectUserListByLike" resultType="com.guangyou.rareanimal_backstage.pojo.entity.User">
+        SELECT *
+        FROM t_user
+        WHERE user_name LIKE #{userLike}
+        or user_account LIKE #{userLike}
+    </select>
+
+    <!--    int deleteByUid(Long userId)-->
     <update id="deleteByUid">
         update t_user
         set is_delete = 1

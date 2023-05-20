@@ -71,6 +71,7 @@ public class ArticleServiceImpl implements ArticleService {
         LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(Article::getId, auditDto.getId());
         updateWrapper.set(Article::getAuditState, auditDto.getIsPassAudit());
+        updateWrapper.set(Article::getAuditReason, auditDto.getAuditReason());
         return articleMapper.update(null, updateWrapper);
     }
 

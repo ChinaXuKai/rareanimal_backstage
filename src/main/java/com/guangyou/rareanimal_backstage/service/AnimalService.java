@@ -1,5 +1,6 @@
 package com.guangyou.rareanimal_backstage.service;
 
+import com.guangyou.rareanimal_backstage.common.lang.Result;
 import com.guangyou.rareanimal_backstage.pojo.dto.AnimalDto;
 import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.entity.Animal;
@@ -18,7 +19,7 @@ public interface AnimalService {
      * @param animalDto
      * @return
      */
-    Integer addAnimal(AnimalDto animalDto);
+    Result addAnimal(AnimalDto animalDto);
 
     /**
      * 根据动物id 删除对应动物的相关数据
@@ -48,4 +49,10 @@ public interface AnimalService {
      */
     List<AnimalVo> selectAnimalByLike(String animalLike);
 
+    /**
+     * 根据动物id 查询动物详情数据
+     * @param animalId 动物id
+     * @return 结果集
+     */
+    Result getAnimalDetailByAid(Long animalId);
 }

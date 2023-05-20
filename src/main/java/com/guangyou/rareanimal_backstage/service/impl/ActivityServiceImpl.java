@@ -58,13 +58,9 @@ public class ActivityServiceImpl implements ActivityService {
         Activity dbActivity = activityMapper.selectOne(queryWrapper);
         dbActivity.setAuditState(auditDto.getIsPassAudit());
         dbActivity.setAuditTime(System.currentTimeMillis());
+        dbActivity.setAuditReason(auditDto.getAuditReason());
         return activityMapper.update(dbActivity,queryWrapper);
     }
-
-
-
-
-
 
 
 }
