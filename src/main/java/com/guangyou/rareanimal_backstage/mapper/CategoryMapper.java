@@ -20,8 +20,14 @@ public interface CategoryMapper extends BaseMapper<Category> {
      */
     Category findCategoryById(Long categoryId);
 
-    //根据文章圈子主题的id查询对应文章圈子
-    List<CategoryVo> selectCategoryByThemeId(Long themeId);
+    /**
+     * 获取圈子 分页数据集
+     * @param initialDataLocation 初始数据位置
+     * @param pageSize 每页多少数据
+     * @param themeId 主题id
+     * @return 圈子分页数据集
+     */
+    List<CategoryVo> getCategoryByPageAndId(Integer initialDataLocation,Integer pageSize, Long themeId);
 
 
 }

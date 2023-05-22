@@ -29,4 +29,10 @@ public interface ArticleMapper extends BaseMapper<Article> {
      */
     int deleteArticleByAid(Long articleId);
 
+    /**
+     * 根据 模糊查询条件 查询 动物id集合
+     * @param articleLike 模糊查询条件
+     * @return 动物id集合
+     */
+    List<Long> getArticleIdByLike(String articleLike);
 }

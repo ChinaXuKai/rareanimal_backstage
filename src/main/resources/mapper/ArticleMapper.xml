@@ -6,14 +6,22 @@
 
 <!--    List<Article> getArticlesByCategory(Long categoryId, Integer initialDataLocation, Integer pageSize);-->
     <select id="getArticlesByCategory" resultType="com.guangyou.rareanimal_backstage.pojo.entity.Article">
-        SELECT *
+        select *
         FROM t_article
         WHERE category_id = #{categoryId}
         and is_delete = 0
+        and audit_state = '待审核'
         LIMIT #{initialDataLocation},#{pageSize}
     </select>
 
-<!--    int deleteArticleByAid(Long articleId)-->
+<!--    List<Long> getArticleIdByLike(String articleLike);-->
+    <select id="getArticleIdByLike" resultType="java.lang.Long">
+        select id
+        from t_article
+        where title like #{articleLike}
+    </select>
+
+    <!--    int deleteArticleByAid(Long articleId)-->
     <update id="deleteArticleByAid">
         update t_article
         set is_delete = 1

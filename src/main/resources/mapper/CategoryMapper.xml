@@ -10,11 +10,12 @@
         where id = #{categoryId}
     </select>
 
-    <!--    List<CategoryVo> selectCategoryByThemeId(Long themeId);-->
-    <select id="selectCategoryByThemeId" resultType="com.guangyou.rareanimal_backstage.pojo.vo.CategoryVo">
+    <!--    List<CategoryVo> getCategoryByPageAndId(Integer initialDataLocation,Integer pageSize, Long themeId);-->
+    <select id="getCategoryByPageAndId" resultType="com.guangyou.rareanimal_backstage.pojo.vo.CategoryVo">
         select id,category_label,category_name,article_count,category_avatar
         from t_category
         where theme_id = #{themeId}
+        LIMIT #{initialDataLocation},#{pageSize}
     </select>
 
 

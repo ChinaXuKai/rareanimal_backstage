@@ -35,4 +35,10 @@ public interface ArticleService {
      */
     int auditArticle(AuditDto auditDto);
 
+    /**
+     * 根据 文章标题 和 文章标签 模糊查询
+     * @param articleLike
+     * @return
+     */
+    Result getArticleByLike(String articleLike);
 }

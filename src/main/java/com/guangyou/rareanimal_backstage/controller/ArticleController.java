@@ -6,6 +6,7 @@ import com.guangyou.rareanimal_backstage.pojo.dto.PageDto;
 import com.guangyou.rareanimal_backstage.pojo.entity.CategoryTheme;
 import com.guangyou.rareanimal_backstage.pojo.vo.ArticleCategoriesVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.ArticleVo;
+import com.guangyou.rareanimal_backstage.pojo.vo.CategoryVo;
 import com.guangyou.rareanimal_backstage.pojo.vo.PageDataVo;
 import com.guangyou.rareanimal_backstage.service.ArticleService;
 import com.guangyou.rareanimal_backstage.service.CategoryService;
@@ -70,4 +71,17 @@ public class ArticleController {
         return Result.succ( "审核成功，文章id为：" + auditDto.getId());
     }
 
+
+    @ApiOperation(value = "根据文章标题和文章标签模糊查询")
+    @GetMapping("/getArticleByLike")
+    public Result getArticleByLike(String articleLike){
+        return articleService.getArticleByLike(articleLike);
+    }
+
+
+    @ApiOperation(value = "获取主题id对应的圈子集合",notes = "获取主题id对应的文章圈子集合")
+    @GetMapping("/getArticleCategory/{themeId}")
+    public Result getArticleCategory(@PathVariable("themeId") Long themeId){
+        return categoryService.getArticleCategoryById(themeId);
+    }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guangyou.rareanimal_backstage.mapper.ArticleCustomTagMapper">
+
+
+<!--    List<Long> getArticleIdByLike(String articleLike);-->
+    <select id="getArticleIdByLike" resultType="java.lang.Long">
+        select DISTINCT article_id
+        from t_article_custom_tag as article_tag
+        where article_tag.custom_tag_name like #{articleLike}
+    </select>
+</mapper>
